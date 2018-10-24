@@ -21,23 +21,28 @@ Note currently only known to work with Julia v0.6
 #### Mac specific install of Julia v0.6
 
 - download it
-```
-wget -P ~/Downloads https://julialang-s3.julialang.org/bin/mac/x64/0.6/julia-0.6.4-mac64.dmg
-sudo hdiutil attach ~/Downloads/julia-0.6.4-mac64.dmg
-```
+   ```
+  wget -P ~/Downloads https://julialang-s3.julialang.org/bin/mac/x64/0.6/julia-0.6.4-mac64.dmg
+  sudo hdiutil attach ~/Downloads/julia-0.6.4-mac64.dmg
+  ```
 - double click the newly mounted drive and drag Julia-0.6 to the Applications directory.
 
 - add julia to your path so you can use the commandline (change .zshrc to .bashrc if using bash)
-```
-echo export "PATH=/Applications/Julia-0.6.app/Contents/Resources/julia/bin:\$PATH" >> ~/.zshrc
-```
+  ```
+  echo export "PATH=/Applications/Julia-0.6.app/Contents/Resources/julia/bin:\$PATH" >> ~/.zshrc
+  ```
 
 #### General
 From the julia REPL call:
 
 ```julialang
+Pkg.clone("https://github.com/d9w/ArcadeLearningEnvironment.jl.git")
+Pkg.build("ArcadeLearningEnvironment")
 Pkg.clone("https://github.com/d9w/CGP.jl")
 Pkg.add.(["Logging", "PaddedViews", "Distributions", "YAML", "ArgParse", "TestImages", "Colors", "QuartzImageIO"])
+Pkg.add("LightGraphs")
+Pkg.add("MetaGraphs")
+Pkg.add("TikzGraphs")
 ```
 
 ## Tests
@@ -121,6 +126,15 @@ to evolve programs which play Atari games. This is a more complex example, as it
 uses Mixed-Type CGP by default (program inputs are RGB Arrays, and outputs are
 scalar actions.) ROMs are available from
 [Atari-py](https://github.com/openai/atari-py/tree/master/atari_py/atari_roms).
+
+Create `rom_files` folder:
+
+```bash
+mkdir ~/.julia/v0.6/ArcadeLearningEnvironment/deps/rom_files
+
+```
+...and copy ROM files there.
+
 Once ROMs have been configured, a CGP agent can be evolved using:
 
 ```bash
