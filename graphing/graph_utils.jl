@@ -6,6 +6,15 @@ using TikzPictures
 using LaTeXStrings
 using Base.Test
 
+function node_label(n, v)
+    # Drop the package name and leading f_ to form a label for the node
+    no_package_name = split(repr(n.f), ".")[end]
+    f_name = join(split(no_package_name, "_")[2:end], "_")
+
+    # I find adding the node number useful  at the moment:
+    string(f_name, " (", v, ")")
+end
+
 function to_graph(c::Chromosome; active_outputs=trues(c.nout))
     actives = [n.active for n in c.nodes]
     actives[1:c.nin] = true
@@ -20,7 +29,7 @@ function to_graph(c::Chromosome; active_outputs=trues(c.nout))
     for vi in (c.nin+1):length(vids)
         v = vids[vi]
         n = c.nodes[v]
-        f_name = split(split(repr(n.f), ".")[end], "_")[end]
+        f_name = node_label(n, v)
         if f_name == "const"
             set_prop!(mg, vi, :name, LaTeXString(@sprintf("%0.2f", n.p)))
         else
