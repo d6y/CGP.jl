@@ -16,7 +16,7 @@ function CGPChromo(genes::Array{Float64}, nin::Int64, nout::Int64)::CGPChromo
     connections = Array{Int64}(2, nin+num_nodes)
     connections[:, 1:nin] = zeros(2, nin)
     positions = collect(1:(nin+num_nodes))/(1.0*(nin+num_nodes))
-    fc = deepcopy(hcat(zeros(2, nin), [rgenes[:, 2]'; rgenes[:, 3]']))
+    fc = deepcopy(hcat(zeros(2, nin), [rgenes[:, 1]'; rgenes[:, 2]']))
     e = (1.0 .- positions) .* Config.recurrency .+ positions
     for j in 1:size(fc)[1]
         fc[j, :] .*= e
@@ -31,7 +31,7 @@ function CGPChromo(genes::Array{Float64}, nin::Int64, nout::Int64)::CGPChromo
     connections = snap(fc, positions)
     functions = Array{Function}(nin+num_nodes)
     functions[1:nin] = Config.f_input
-    functions[(nin+1):end] = map(i->Config.index_in(Config.functions, i), rgenes[:, 1])
+    functions[(nin+1):end] = map(i->Config.index_in(Config.functions, i), rgenes[:, 3])
     outputs = Int64.(ceil.(genes[nin+(1:nout)]*(nin+num_nodes)))
     active = find_active(nin, outputs, connections)
     params = [zeros(nin); 2.0*rgenes[:, 4]-1.0]
