@@ -31,7 +31,7 @@ function CGPChromo(genes::Array{Float64}, nin::Int64, nout::Int64)::CGPChromo
     connections = snap(fc, positions)
     functions = Array{Function}(nin+num_nodes)
     functions[1:nin] = Config.f_input
-    functions[(nin+1):end] = map(i->Config.index_in(Config.functions, i), rgenes[:, 3])
+    functions[(nin+1):end] = map(i->Config.index_in(Config.functions, i), rgenes[:, 1])
     outputs = Int64.(ceil.(genes[nin+(1:nout)]*(nin+num_nodes)))
     active = find_active(nin, outputs, connections)
     params = [zeros(nin); 2.0*rgenes[:, 4]-1.0]
