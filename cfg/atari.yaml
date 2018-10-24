@@ -1,6 +1,6 @@
 # General settings
-starting_nodes: 50
-static_node_size: 70
+starting_nodes: 40
+static_node_size: 40
 node_size_cap: 150
 node_inputs: 2
 weights: True
@@ -15,13 +15,13 @@ log_config: True
 log_function: ":log_best"
 # Mutation
 active_mutate: False
-input_mutation_rate: 0.3
-output_mutation_rate: 0.2
-node_mutation_rate: 0.2
+input_mutation_rate: 0.0
+output_mutation_rate: 0.6
+node_mutation_rate: 0.1
 node_size_delta: 0.0
 modify_mutation_rate: 0.0
 # Oneplus settings
-lambda: 7
+lambda: 9
 # GA settings
 ga_population: 50
 ga_elitism_rate: 0.1
@@ -92,6 +92,9 @@ functions:
   f_transpose:
     - "x"
     - "if ndims(x) < 3; return Array{Float64}(ctranspose(x)); else; return x; end"
+  f_vecfromdouble:
+    - "[x]"
+    - "x"
   # mathematical
   f_add:
     - "(x+y)/2.0"
@@ -151,6 +154,16 @@ functions:
     - "Float64.(x.>y)"
     - "Float64.(x.>y)"
     - "Float64.(.>(eqsize(x,y,c)...))"
+  f_max2:
+    - "max(x,y)"
+    - "max.(x,y)"
+    - "max.(x,y)"
+    - "max.(eqsize(x, y, c)...)"
+  f_min2:
+    - "min(x,y)"
+    - "min.(x,y)"
+    - "min.(x,y)"
+    - "min.(eqsize(x, y, c)...)"
   # Statistical
   f_stddev:
     - "0.0"
@@ -176,23 +189,10 @@ functions:
   f_max1:
     - "x"
     - "maximum(x)"
-  f_max2:
-    - "max(x,y)"
-    - "max.(x,y)"
-    - "max.(x,y)"
-    - "max.(eqsize(x, y, c)...)"
   f_min1:
     - "x"
     - "minimum(x)"
-  f_min2:
-    - "min(x,y)"
-    - "min.(x,y)"
-    - "min.(x,y)"
-    - "min.(eqsize(x, y, c)...)"
   # Misc
-  f_vecfromdouble:
-    - "[x]"
-    - "x"
   f_ywire:
     - "y"
   f_nop:
