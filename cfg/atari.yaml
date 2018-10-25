@@ -12,7 +12,10 @@ input_start: -1.0
 # Logging settings
 save_best: True
 log_config: True
-log_function: ":log_best"
+#log_function: ":log_best"
+log_function: ":log_all"
+# Graph setting
+label_with_node_mumber: True
 # Mutation
 active_mutate: False
 input_mutation_rate: 0.0

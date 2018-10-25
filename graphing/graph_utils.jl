@@ -11,8 +11,11 @@ function node_label(n, v)
     no_package_name = split(repr(n.f), ".")[end]
     f_name = join(split(no_package_name, "_")[2:end], "_")
 
-    # I find adding the node number useful  at the moment:
-    string(f_name, " (", v, ")")
+    if CGP.Config.label_with_node_mumber
+        string(f_name, " (", v, ")")
+    else
+        f_name
+    end
 end
 
 function to_graph(c::Chromosome; active_outputs=trues(c.nout))
