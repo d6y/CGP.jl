@@ -9,10 +9,11 @@ using Base.Test
 function node_label(n, v)
     # Drop the package name and leading f_ to form a label for the node
     no_package_name = split(repr(n.f), ".")[end]
-    f_name = join(split(no_package_name, "_")[2:end], "_")
+    latex_underscore = "\\_"
+    f_name = join(split(no_package_name, "_")[2:end], latex_underscore)
 
     if CGP.Config.label_with_node_mumber
-        string(f_name, " (", v, ")")
+        "$f_name ($v)"
     else
         f_name
     end
