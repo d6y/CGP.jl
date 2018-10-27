@@ -53,6 +53,8 @@ and instead load the module locally. E.g., something like:
 JULIA_LOAD_PATH=./src julia experiments/atari.jl --id space_invaders --seed 0
 ```
 
+NB: a seed of 0 is interpreted by ALE as "use the current time as the seed".
+
 ## Tests
 
 `CGP.jl` comes with exhaustive tests which can offer examples of detailed usage
