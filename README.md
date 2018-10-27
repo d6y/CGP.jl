@@ -45,6 +45,14 @@ Pkg.add("MetaGraphs")
 Pkg.add("TikzGraphs")
 ```
 
+Note that the above will have installed CGP into `~/.julia` via the `Pkg.clone` command for CGP.jl.
+If you're working on local modifications to CGP you won't want to do that,
+and instead load the module locally. E.g., something like:
+
+```
+JULIA_LOAD_PATH=./src julia experiments/atari.jl --id space_invaders --seed 0
+```
+
 ## Tests
 
 `CGP.jl` comes with exhaustive tests which can offer examples of detailed usage
