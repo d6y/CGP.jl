@@ -1,0 +1,16 @@
+## This is an example of specifying instances with a file.
+
+# Each line is an instance relative to trainInstancesDir
+# (see scenario.txt.tmpl) and an optional sequence of instance-specific
+# parameters that will be passed to target-runnerx when invoked on that
+# instance.
+
+# Empty lines and comments are ignored.
+
+experiments/atari.jl --id boxing
+experiments/atari.jl --id centipede
+experiments/atari.jl --id fishing_derby
+experiments/atari.jl --id frostbite
+experiments/atari.jl --id ms_pacman
+experiments/atari.jl --id space_invaders
+experiments/atari.jl --id pong

@@ -118,6 +118,8 @@ if ~isinteractive()
                         max_frames=args["frames"])[1]
     maxfit, best = ea(nin, nout, fit;
                       seed=args["seed"], id=args["id"], ctype=ctype)
+
+    # Note: -maxfit is returned, being the "cost" to be minimized by irace
     Logging.info(@sprintf("E%0.6f", -maxfit))
     if args["render"]
         render_genes(best, args; ctype=ctype)

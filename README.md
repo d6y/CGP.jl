@@ -154,6 +154,21 @@ julia experiments/atari.jl --id boxing
 This requires a long runtime. Parallelizing evaluations is a currently planned
 improvement: see [this issue](https://github.com/d9w/CGP.jl/issues/2).
 
+## Running `irace`
+
+Edit `target-runner` and adjust `EXE` and `JULIA_LOAD_PATH`. Then:
+
+```
+$ cd irace_tuning
+$ irace --check --parallel 2
+```
+
+...and check the `irace_logs` folder for logs.
+
+Review the settings of `MAX_FRAMES` and `TOTAL_EVALS` in the `target-runner` script.
+
+
+
 ## Configuration
 
 Configuration is handled by `src/config.jl`. Configurable options are read in
