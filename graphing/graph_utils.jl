@@ -4,7 +4,7 @@ using MetaGraphs
 using TikzGraphs
 using TikzPictures
 using LaTeXStrings
-using Base.Test
+using Test
 
 function node_label(n, v)
     # Drop the package name and leading f_ to form a label for the node
@@ -94,7 +94,7 @@ function get_graph_genes(mg::MetaDiGraph, nin::Int64, nout::Int64)
     node_positions = rand(nv(mg) - nout - nin)
     sort!(node_positions)
     positions = [CGP.Config.input_start .* genes; node_positions]
-    outputs = Array{Float64}(nout)
+    outputs = Array{Float64}(undef, nout)
     for oi in 1:nout
         vi = oi + (nv(mg) - nout)
         @assert get_prop(mg, vi, :type) == 1

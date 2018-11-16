@@ -16,44 +16,38 @@ the [CGP site](https://www.cartesiangp.com/).
 
 ## Installation
 
-Note currently only known to work with Julia v0.6
+Note currently only known to work with Julia v0.7
 
-#### Mac specific install of Julia v0.6
+#### Mac specific install of Julia v0.7
 
 - download it
    ```
-  wget -P ~/Downloads https://julialang-s3.julialang.org/bin/mac/x64/0.6/julia-0.6.4-mac64.dmg
-  sudo hdiutil attach ~/Downloads/julia-0.6.4-mac64.dmg
+  wget -P ~/Downloads https://julialang-s3.julialang.org/bin/mac/x64/0.7/julia-0.7.0-mac64.dmg
+  sudo hdiutil attach ~/Downloads/julia-0.7.0-mac64.dmg
   ```
-- double click the newly mounted drive and drag Julia-0.6 to the Applications directory.
+- double click the newly mounted drive and drag Julia-0.7 to the Applications directory.
 
-- add julia to your path so you can use the commandline (change .zshrc to .bashrc if using bash)
+- add julia to your path so you can use the command line (change .zshrc to .bashrc if using bash)
   ```
-  echo export "PATH=/Applications/Julia-0.6.app/Contents/Resources/julia/bin:\$PATH" >> ~/.zshrc
+  echo export "PATH=/Applications/Julia-0.7.app/Contents/Resources/julia/bin:\$PATH" >> ~/.zshrc
   ```
 
-#### General
-From the julia REPL call:
+#### Project dependencies
+
+This project was created with roughly this configuration:
 
 ```julialang
-Pkg.clone("https://github.com/d9w/ArcadeLearningEnvironment.jl.git")
-Pkg.build("ArcadeLearningEnvironment")
-Pkg.clone("https://github.com/d9w/CGP.jl")
-Pkg.add.(["Logging", "PaddedViews", "Distributions", "YAML", "ArgParse", "TestImages", "Colors", "QuartzImageIO"])
-Pkg.add("LightGraphs")
-Pkg.add("MetaGraphs")
-Pkg.add("TikzGraphs")
+julia> ]
+(v0.7) pkg> activate .
+(CGP.jl) pkg> add "https://github.com/d9w/ArcadeLearningEnvironment.jl.git"
+(CGP.jl) pkg> add PaddedViews Images Distributions YAML ArgParse TestImages Colors QuartzImageIO
+(CGP.jl) pkg> add LightGraphs MetaGraphs TikzGraphs ImageTransformations ImageMagick
+(CGP.jl) pkg> add SharedArrays Printf Distributed
+(CGP.jl) pkg> build
+(CGP.jl) pkg> <delete><delete>
 ```
 
-Note that the above will have installed CGP into `~/.julia` via the `Pkg.clone` command for CGP.jl.
-If you're working on local modifications to CGP you won't want to do that,
-and instead load the module locally. E.g., something like:
-
-```
-JULIA_LOAD_PATH=./src julia experiments/atari.jl --id space_invaders --seed 0
-```
-
-NB: a seed of 0 is interpreted by ALE as "use the current time as the seed".
+You should not need to re-run those commands.
 
 ## Tests
 
@@ -61,7 +55,7 @@ NB: a seed of 0 is interpreted by ALE as "use the current time as the seed".
 of the different genetic operators and CGP extensions. To run all tests, use
 
 ```bash
-julia run_tests.jl
+julia --project=. run_tests.jl
 ```
 
 **Note** you may currently need to run the tests a few times to get through them successfully.
@@ -76,7 +70,7 @@ XOR evolves a function to compute the `xor` function over `nsamples` number of
 randomly generated bits strings of `nbits` length. This can be run simply with
 
 ```bash
-julia experiments/xor.jl
+julia --project=. experiments/xor.jl
 ```
 
 but various options can be set using command line arguments:
@@ -140,7 +134,7 @@ scalar actions.) ROMs are available from
 Create `rom_files` folder:
 
 ```bash
-mkdir ~/.julia/v0.6/ArcadeLearningEnvironment/deps/rom_files
+mkdir ~/.julia/v0.7/ArcadeLearningEnvironment/deps/rom_files
 
 ```
 ...and copy ROM files there.

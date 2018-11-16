@@ -111,7 +111,7 @@ CGP.Config.init("cfg/test.yaml")
 
 Logging.configure(filename=log, level=INFO)
 nin = inputs[fitness]; nout = outputs[fitness]
-fit = x->repeat(x, eval(parse(fitness)))
+fit = x->repeat(x, eval(Meta.parse(fitness)))
 
 include("param_sweep.jl")
 param_sweep()

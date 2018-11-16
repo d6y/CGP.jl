@@ -1,6 +1,5 @@
 module CGP
 
-using Logging
 using PaddedViews
 using Distributions
 

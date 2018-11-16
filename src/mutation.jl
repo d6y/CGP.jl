@@ -2,6 +2,8 @@
 # chromosomes, but assuming a [input, output, node1, node2, ...] gene structure
 # when necessary. Some chromosomes will need to override these functions.
 
+using Random
+
 export gene_mutate,
     active_gene_mutate,
     add_nodes,
@@ -66,7 +68,7 @@ function delete_nodes(c::Chromosome)
             return clone(c)
         end
     end
-    deletes = c.nin + randperm(length(c.nodes)-c.nin)[1:n_dels]
+    deletes = c.nin .+ randperm(length(c.nodes)-c.nin)[1:n_dels]
     child_nodes = setdiff((c.nin+1):length(c.nodes), deletes)
     genes = [c.genes[1:(c.nin+c.nout)]; get_genes(c, child_nodes)]
     typeof(c)(genes, c.nin, c.nout)
@@ -80,8 +82,8 @@ function add_subtree(c::Chromosome)
     poses = rand(n_adds)
     sort!(poses)
     cpos = get_positions(c)
-    c1 = Array{Float64,1}(n_adds)
-    c2 = Array{Float64,1}(n_adds)
+    c1 = Array{Float64,1}(undef, n_adds)
+    c2 = Array{Float64,1}(undef, n_adds)
     for n in 1:n_adds
         pos_set = [poses[1:n]; rand(cpos[cpos .< poses[n]], n)]
         c1[n] = rand(pos_set)
@@ -176,5 +178,5 @@ function adaptive_node_mutate(c::Chromosome)
 end
 
 function mutate(c::Chromosome)
-    eval(parse(string(Config.mutate_method)))(c)
+    eval(Meta.parse(string(Config.mutate_method)))(c)
 end

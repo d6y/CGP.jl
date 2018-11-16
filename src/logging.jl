@@ -1,5 +1,7 @@
 export log_best, log_all
 
+using Printf
+
 function log_best(id::String, seed::Int64, eval_count::Int64, max_fit::Float64,
                   best::Chromosome, ea::Function, ctype::DataType, log_gen::Bool)
     if log_gen

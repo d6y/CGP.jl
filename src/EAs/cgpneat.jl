@@ -1,5 +1,7 @@
 export cgpneat
 
+using Random
+
 function species_selection(fits::Array{Float64})
     # return the index of the winner of a n-way tournament
     if length(fits) == 1
@@ -14,9 +16,9 @@ end
 
 function speciation(population::Array, reprs::Array, distance::Function)
     # return a vector of ints corresponding to the species of each individual in population
-    species = Array{Int64}(length(population))
+    species = Array{Int64}(undef, length(population))
     for p in eachindex(population)
-        distances = Array{Float64}(length(reprs))
+        distances = Array{Float64}(undef, length(reprs))
         for r in eachindex(reprs)
             distances[r] = distance(population[p], reprs[r])
         end
@@ -57,9 +59,9 @@ end
 
 function cgpneat(ctype::DataType, nin::Int64, nout::Int64, fitness::Function;
                  seed::Int64=0, record_best::Bool=false, record_fitness::Function=fitness)
-    population = Array{ctype}(Config.ga_population)
+    population = Array{ctype}(iundef, Config.ga_population)
     fits = -Inf*ones(Float64, Config.ga_population)
-    species = Array{Int64}(Config.ga_population)
+    species = Array{Int64}(undef, Config.ga_population)
     for p in eachindex(population)
         if p <= Config.init_species
             population[p] = ctype(nin, nout)
@@ -110,7 +112,7 @@ function cgpneat(ctype::DataType, nin::Int64, nout::Int64, fitness::Function;
         # representatives
         Logging.debug("representatives $generation")
         nspecies = length(unique(species))
-        reprs = Array{ctype}(nspecies)
+        reprs = Array{ctype}(undef, nspecies)
         for s in 1:nspecies
             reprs[s] = clone(population[rand(find(species.==s))])
         end
@@ -118,7 +120,7 @@ function cgpneat(ctype::DataType, nin::Int64, nout::Int64, fitness::Function;
         # species sizes
         Logging.debug("species sizes $generation $nspecies")
         spec_sizes = species_sizes(fits, species)
-        new_pop = Array{ctype}(Config.ga_population)
+        new_pop = Array{ctype}(undef, Config.ga_population)
         new_fits = -Inf*ones(Float64, Config.ga_population)
         popi = 1
 

@@ -4,7 +4,7 @@ using ArgParse
 
 function read_data(dfile::String)
     df = open(dfile, "r")
-    meta = [parse(split(readline(df), ' ')[2]) for i=1:4]
+    meta = [Meta.parse(split(readline(df), ' ')[2]) for i=1:4]
     data = Float64.(readdlm(dfile, ' ', skipstart=4))
     training = data[1:meta[3], :]
     test = data[meta[3]+(1:meta[4]), :]
@@ -69,9 +69,9 @@ CGP.Config.init(Dict([k=>args[k] for k in setdiff(
 srand(args["seed"])
 Logging.configure(filename=args["log"], level=INFO)
 nin, nout, train, test = read_data(args["data"])
-fitness = eval(parse(args["fitness"]))
-ea = eval(parse(args["ea"]))
-ctype = eval(parse(args["chromosome"]))
+fitness = eval(Meta.parse(args["fitness"]))
+ea = eval(Meta.parse(args["ea"]))
+ctype = eval(Meta.parse(args["chromosome"]))
 
 fit = x->fitness(x, train, nin, nout)
 refit = x->fitness(x, test, nin, nout)

@@ -94,7 +94,7 @@ function pure_cmaes(objFun::Function, pinit::Array{Float64}, sigma::Array{Float6
 
     B = eye(N,N)                        # B defines the coordinate system
 
-    BD = B.*repmat(diagD',N,1)          # B*D for speed up only
+    BD = B.*repeat(diagD',N,1)          # B*D for speed up only
     C = diagm(diagC);                   # covariance matrix == BD*(BD)'
 
     chiN=N^0.5*(1-1/(4*N)+1/(21*N^2))  # expectation of  ||N(0,I)|| == norm(randn(N,1))
@@ -149,15 +149,15 @@ function pure_cmaes(objFun::Function, pinit::Array{Float64}, sigma::Array{Float6
         pc = (1-cc)*pc + hsig*(sqrt(cc*(2-cc)*mueff)/sigma) * (xmean-xold)
 
         # Adapt covariance matrix C
-        # artmp = (1/sigma) * (arx[:,arindex[1:mu]] - repmat(xold,1,mu))  # mu difference vectors
+        # artmp = (1/sigma) * (arx[:,arindex[1:mu]] - repeat(xold,1,mu))  # mu difference vectors
 
         if(ccov1+ccovmu>0)
 
           C =( (1-ccov1-ccovmu+(1-hsig)*ccov1*cc*(2-cc)) * C     # regard old matrix
               + ccov1 * pc*pc'                             # plus rank one update
               + ccovmu                                     # plus rank mu update
-              * sigma^-2 * (arx[:,arindex[1:mu]]-repmat(xold,1,mu))
-              * (repmat(weights,1,N) .* (arx[:,arindex[1:mu]]-repmat(xold,1,mu))')  )
+              * sigma^-2 * (arx[:,arindex[1:mu]]-repeat(xold,1,mu))
+              * (repeat(weights,1,N) .* (arx[:,arindex[1:mu]]-repeat(xold,1,mu))')  )
 
         end
 
@@ -175,7 +175,7 @@ function pure_cmaes(objFun::Function, pinit::Array{Float64}, sigma::Array{Float6
 
             diagC = diag(C);
 
-            BD = B.*repmat(diagD',N,1); # O(n^2)
+            BD = B.*repeat(diagD',N,1); # O(n^2)
         end
 
         #Stop conditions:

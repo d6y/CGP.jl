@@ -40,9 +40,9 @@ function constant_functional_distance(c1::Chromosome, c2::Chromosome)
     distance = 0
     reset!(c1)
     reset!(c2)
-    range_inps = linspace(-1, 1, 10)
+    range_inps = range(-1, stop=1, length=10)
     for i=1:10
-        inps = repmat([range_inps[i]], c1.nin)
+        inps = repeat([range_inps[i]], c1.nin)
         distance += sum(abs.(process(c1, inps) .- process(c2, inps)))/c1.nout
     end
     distance/10
@@ -52,9 +52,9 @@ function random_functional_distance(c1::Chromosome, c2::Chromosome)
     distance = 0
     reset!(c1)
     reset!(c2)
-    range_inps = linspace(-1, 1, 10)
+    range_inps = range(-1, stop=1, length=10)
     for i=1:10
-        inps = 2*rand(c1.nin) - 1.0
+        inps = 2*rand(c1.nin) .- 1.0
         distance += sum(abs.(process(c1, inps) .- process(c2, inps)))/c1.nout
     end
     distance/10
@@ -73,5 +73,5 @@ function active_distance(c1::Chromosome, c2::Chromosome)
 end
 
 function distance(c1::Chromosome, c2::Chromosome)
-    eval(parse(string(Config.distance_method)))(c1, c2)
+    eval(Meta.parse(string(Config.distance_method)))(c1, c2)
 end

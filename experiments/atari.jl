@@ -60,7 +60,7 @@ function get_bests(logfile::String)
     bests = []
     for line in readlines(logfile)
         if contains(line, ":C:")
-            genes = eval(parse(split(line, ":C: ")[2]))
+            genes = eval(Meta.parse(split(line, ":C: ")[2]))
             append!(bests, [genes])
         end
     end
@@ -111,8 +111,8 @@ if ~isinteractive()
     srand(args["seed"])
     Logging.configure(filename=args["log"], level=INFO)
     nin, nout = get_params(args)
-    ea = eval(parse(args["ea"]))
-    ctype = eval(parse(args["chromosome"]))
+    ea = eval(Meta.parse(args["ea"]))
+    ctype = eval(Meta.parse(args["chromosome"]))
 
     fit = x->play_atari(x, args["id"], args["seed"];
                         max_frames=args["frames"])[1]

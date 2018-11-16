@@ -1,5 +1,7 @@
-using Base.Test
+using Test
 using CGP
+using Random
+
 CGP.Config.init("cfg/test.yaml")
 
 function test_mutate(c::Chromosome, child::Chromosome)

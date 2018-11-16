@@ -1,4 +1,4 @@
-using Base.Test
+using Test
 using CGP
 CGP.Config.init("cfg/test.yaml")
 

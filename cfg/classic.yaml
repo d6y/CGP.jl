@@ -11,15 +11,15 @@ functions:
     - abs.(x).^abs.(y)
     - .^(eqsize(abs.(x),abs.(y),c)...)
   f_expx:
-    - (exp.(x)-1.0)/(exp(1.0)-1.0)
+    - (exp.(x) .- 1.0)/(exp(1.0)-1.0)
   f_sinx:
     - sin.(x)
   f_cosx:
     - cos.(x)
   f_sqrtxy:
-    - sqrt.(x*x+y*y)/sqrt(2.0)
-    - sqrt.(x*x+y.*y)/sqrt(2.0)
-    - sqrt.(x.*x+y*y)/sqrt(2.0)
+    - sqrt.(x*x .+ y*y)/sqrt(2.0)
+    - sqrt.(x*x .+ y.*y)/sqrt(2.0)
+    - sqrt.(x.*x .+ y*y)/sqrt(2.0)
     - sqrt.(.+(eqsize(x.*x, y.*y, c)...))/sqrt(2.0)
   f_sum:
     - (x+y)/2.0
@@ -39,7 +39,7 @@ functions:
   f_cmult:
     - x.*c
   f_inv:
-    - scaled(1./x)
+    - scaled(1 ./x)
   f_gt:
     - Float64(x > y)
     - Float64.(x.>y)
