@@ -1,5 +1,8 @@
 using Logging
 using ArgParse
+using Distributed
+using Random
+
 @everywhere using CGP
 
 @everywhere CGP.Config.init("cfg/test.yaml")
@@ -30,7 +33,7 @@ function get_args()
 end
 
 function run_xor(args::Dict)
-    srand(args["seed"])
+    Random.seed!(args["seed"])
     global_logger(SimpleLogger(open(args["log"], "a+")))
     nin = args["nbits"]
     nout = 1
