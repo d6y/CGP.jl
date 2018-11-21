@@ -2,6 +2,8 @@ using CGP
 using Logging
 using PyCall
 using ArgParse
+using Printf
+using Random
 
 @pyimport gym
 @pyimport pybullet
@@ -61,8 +63,8 @@ if ~isinteractive()
     CGP.Config.init(Dict([k=>args[k] for k in setdiff(
         keys(args), ["seed", "log", "id", "ea", "chromosome", "cfg", "graph"])]...))
 
-    srand(args["seed"])
-    Logging.configure(filename=args["log"], level=INFO)
+    Random.seed!(args["seed"])
+    global_logger(SimpleLogger(open(args["log"], "a+")))
     ea = eval(Meta.parse(args["ea"]))
     ctype = eval(Meta.parse(args["chromosome"]))
     env = gym.make(args["id"])
@@ -72,7 +74,7 @@ if ~isinteractive()
     fit = x->play_env(x, env, false)
     maxfit, best = ea(nin, nout, fit; seed=args["seed"], ctype=ctype, id=args["id"])
 
-    Logging.info(@sprintf("E%0.6f", -maxfit))
+    @info(@sprintf("E%0.6f", -maxfit))
 
     best_ind = ctype(best, nin, nout)
     play_env(best_ind, env, true)

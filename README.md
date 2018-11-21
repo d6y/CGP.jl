@@ -96,13 +96,13 @@ Classification is the default problem and uses accuracy as the evolutionary
 fitness. To run classification on the Breast Cancer set, use:
 
 ```bash
-julia experiments/data.jl --data data/cancer.dt --log cancer.log
+julia --project=. experiments/data.jl --data data/cancer.dt --log cancer.log
 ```
 
 Regression can be specified as an option on the command line:
 
 ```bash
-julia experiments/data.jl --data data/abalone.dt --log abalone.log --fitness regression
+julia --project=. experiments/data.jl --data data/abalone.dt --log abalone.log --fitness regression
 ```
 
 ### OpenAI gym environments
@@ -118,7 +118,7 @@ necessary packages (`gym` and `pybullet`).
 To evolve a program for the `MountainCarContinuous-v0` environment, run:
 
 ```bash
-julia experiments/gym.jl --total_evals 200 --seed 1
+julia project=. experiments/gym.jl --total_evals 200 --seed 1
 ```
 
 ### Atari
