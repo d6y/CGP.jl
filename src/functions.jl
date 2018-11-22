@@ -87,12 +87,6 @@ function range_in(list::Array{Float64}, xi::Array{Float64}, yi::Float64)
     range_in(list, mean(xi), yi)
 end
 
-function scaled_indmax(x::Array{Float64})
-    scaled(collect((ind2sub(x, indmax(x)) .- 1) ./ (size(x) .- 1)))
-end
-
-scaled_indmax(x::Array{Float64}, y::Array{Float64}) = scaled_indmax(x)
-
 function com(x::Array{Float64})
     # TODO: speed up
     com = Tuple(zeros(ndims(x)))
