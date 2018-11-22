@@ -39,7 +39,7 @@ This project was created with roughly this configuration:
 ```julialang
 julia> ]
 (v0.7) pkg> activate .
-(CGP.jl) pkg> add "https://github.com/d9w/ArcadeLearningEnvironment.jl.git"
+(CGP.jl) pkg> add "https://github.com/d6y/ArcadeLearningEnvironment.jl.git"
 (CGP.jl) pkg> add PaddedViews Images Distributions YAML ArgParse TestImages Colors QuartzImageIO
 (CGP.jl) pkg> add LightGraphs MetaGraphs TikzGraphs ImageTransformations ImageMagick
 (CGP.jl) pkg> add SharedArrays Printf Distributed

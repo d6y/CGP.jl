@@ -4,6 +4,14 @@ git-tree-sha1 = "8d59c3b1463b5e0ad05a3698167f85fac90e184d"
 uuid = "621f4979-c628-5d54-868e-fcf4e3e8185c"
 version = "0.3.2"
 
+[[ArcadeLearningEnvironment]]
+deps = ["BinDeps", "Colors", "ImageCore", "ImageTransformations", "Libdl"]
+git-tree-sha1 = "f6df731494acca487554befc9249ad61d023a6f9"
+repo-rev = "master"
+repo-url = "https://github.com/d6y/ArcadeLearningEnvironment.jl.git"
+uuid = "91b264d3-66f8-490e-9e15-d9e1de5befb2"
+version = "2.0.0"
+
 [[ArgParse]]
 deps = ["Compat", "Test", "TextWrap"]
 git-tree-sha1 = "37159c768f28ae52ef9af1e70669d25a68ba7d61"
