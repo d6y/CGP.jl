@@ -4,3 +4,5 @@
 deps/deps.jl
 irace_logs
 supported_roms
+frames
+graph.pdf

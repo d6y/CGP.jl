@@ -21,8 +21,8 @@ end
 
 function to_graph(c::Chromosome; active_outputs=trues(c.nout))
     actives = [n.active for n in c.nodes]
-    actives[1:c.nin] = true
-    vids = find(actives)
+    actives[1:c.nin] .= true
+    vids = findall(actives)
     pos = get_positions(c)
     mg = MetaDiGraph(SimpleDiGraph())
     add_vertices!(mg, length(vids)+sum(active_outputs))#c.nout)

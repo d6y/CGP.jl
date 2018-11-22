@@ -61,8 +61,8 @@ end
 function get_bests(logfile::String)
     bests = []
     for line in readlines(logfile)
-        if contains(line, ":C:")
-            genes = eval(Meta.parse(split(line, ":C: ")[2]))
+        if occursin("C:", line)
+            genes = eval(Meta.parse(split(line, "C: ")[2]))
             append!(bests, [genes])
         end
     end
@@ -101,7 +101,8 @@ function render_genes(genes::Array{Float64}, args::Dict;
     end
     active_outputs = out_counts .> 0
     chromo2 = ctype(new_genes, nin, nout)
-    file =  string("graphs/", args["id"], "_", args["seed"], "_", id, ".pdf");
+    mkpath("graphs")
+    file = string("graphs/", args["id"], "_", args["seed"], "_", id, ".pdf");
     chromo_draw(chromo2, file; active_outputs=active_outputs)
 end
 
