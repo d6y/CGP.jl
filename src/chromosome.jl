@@ -36,7 +36,7 @@ end
 
 function process(c::Chromosome, inps::Array)::Array{Float64}
     for i in 1:c.nin
-        c.nodes[i].output = inps[i]
+        c.nodes[i].output = copy(inps[i])
     end
     maxlength = maximum(map(length, inps))
     for n in c.nodes

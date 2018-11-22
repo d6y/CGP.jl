@@ -167,9 +167,9 @@ version = "0.2.4"
 
 [[FileIO]]
 deps = ["Pkg", "Random", "Test"]
-git-tree-sha1 = "884066c07188cc0f57d0ebdcab6c9a09cc734dbc"
+git-tree-sha1 = "1a114d08094e7267ba8d4d684f930d5a722184de"
 uuid = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
-version = "1.0.3"
+version = "1.0.4"
 
 [[FixedPointNumbers]]
 deps = ["Test"]
@@ -239,9 +239,9 @@ version = "0.1.2"
 
 [[ImageTransformations]]
 deps = ["AxisAlgorithms", "ColorTypes", "ColorVectorSpace", "Colors", "CoordinateTransformations", "FixedPointNumbers", "IdentityRanges", "ImageCore", "Interpolations", "LinearAlgebra", "OffsetArrays", "StaticArrays", "Test"]
-git-tree-sha1 = "fdc6ecdb96a03f4df62ded306eb32fae68ccb588"
+git-tree-sha1 = "18ae1c0a8df31549a9452ceac93751d4aa166071"
 uuid = "02fcd773-0e25-5acc-982a-7f6622650795"
-version = "0.7.0"
+version = "0.7.1"
 
 [[Images]]
 deps = ["AxisArrays", "Base64", "ColorTypes", "ColorVectorSpace", "Colors", "FileIO", "FixedPointNumbers", "Graphics", "ImageAxes", "ImageCore", "ImageDistances", "ImageFiltering", "ImageMetadata", "ImageMorphology", "ImageShow", "ImageTransformations", "IndirectArrays", "LinearAlgebra", "MappedArrays", "OffsetArrays", "Random", "Reexport", "SIUnits", "SparseArrays", "StaticArrays", "Statistics", "StatsBase", "Test", "TiledIteration"]

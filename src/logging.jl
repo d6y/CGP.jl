@@ -1,5 +1,5 @@
 export log_best, log_all
-
+using Logging
 using Printf
 
 function log_best(id::String, seed::Int64, eval_count::Int64, max_fit::Float64,
@@ -19,6 +19,7 @@ function log_best(id::String, seed::Int64, eval_count::Int64, max_fit::Float64,
     if Config.save_best
         @info(@sprintf("C: %s", string(best.genes)))
     end
+    flush(current_logger().stream)
     nothing
 end
 

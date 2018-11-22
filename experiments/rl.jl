@@ -18,7 +18,7 @@ function cart_pole(c::Chromosome)
            reward < 100)
         # get action
         inps = [-1.0; max.(min.(state ./ limits, 1.0), -1.0)[:]]
-        action = indmax(process(c, inps))
+        action = argmax(process(c, inps))
         force = force_mag * (2 * (action - 1) - 1)
         reward += 1
 
@@ -109,7 +109,7 @@ if length(ARGS) > 2; fitness = ARGS[3]; end
 # CGP.Config.init("cfg/classic.yaml")
 CGP.Config.init("cfg/test.yaml")
 
-Logging.configure(filename=log, level=INFO)
+global_logger(SimpleLogger(open(args["log"], "a+")))
 nin = inputs[fitness]; nout = outputs[fitness]
 fit = x->repeat(x, eval(Meta.parse(fitness)))
 

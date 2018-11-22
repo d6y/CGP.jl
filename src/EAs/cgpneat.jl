@@ -9,7 +9,7 @@ function species_selection(fits::Array{Float64})
     else
         n = min(3, length(fits))
         fshuffle = randperm(length(fits))[1:n]
-        winner = indmax(fits[fshuffle])
+        winner = argmax(fits[fshuffle])
         return fshuffle[winner]
     end
 end
@@ -40,19 +40,19 @@ end
 function species_sizes(fits::Array{Float64}, species::Array{Int64})
     nspecies = length(unique(species))
     spec_fits = map(x->mean(fits[species.==x])-minimum(fits), 1:nspecies)
-    Logging.debug("spec fits: $spec_fits")
+    @debug("spec fits: $spec_fits")
     spec_sizes = map(x->spec_fits[x]/sum(spec_fits), 1:nspecies)
     spec_sizes = spec_sizes./sum(spec_sizes).*Config.ga_population
     spec_sizes[isnan.(spec_sizes)] = 0
     spec_sizes = Int64.(round.(spec_sizes))
 
     while sum(spec_sizes) > Config.ga_population
-        spec_sizes[indmax(spec_sizes)] -= 1
+        spec_sizes[argmax(spec_sizes)] -= 1
     end
     while sum(spec_sizes) < Config.ga_population
-        spec_sizes[indmin(spec_sizes)] += 1
+        spec_sizes[argmax(spec_sizes)] += 1
     end
-    Logging.debug("spec sizes: $spec_sizes")
+    @debug("spec sizes: $spec_sizes")
     spec_sizes
 end
 
@@ -78,7 +78,7 @@ function cgpneat(ctype::DataType, nin::Int64, nout::Int64, fitness::Function;
 
     for generation in 1:Config.ga_num_generations
         # evaluation
-        Logging.debug("evaluation $generation")
+        @debug("evaluation $generation")
         new_best = false
         for p in eachindex(population)
             if fits[p] == -Inf
@@ -98,19 +98,19 @@ function cgpneat(ctype::DataType, nin::Int64, nout::Int64, fitness::Function;
             if record_best
                 refit = record_fitness(best)
             end
-            Logging.info(@sprintf("R: %d %d %0.5f %d %d %s %s %s",
+            @info(@sprintf("R: %d %d %0.5f %d %d %s %s %s",
                                   seed, eval_count, max_fit,
                                   sum([n.active for n in best.nodes]),
                                   length(best.nodes),
                                   "NEAT", string(ctype),
                                   Config.to_string()))
             if Config.save_best
-                Logging.info(@sprintf("C: %s", string(best.genes)))
+                @info(@sprintf("C: %s", string(best.genes)))
             end
         end
 
         # representatives
-        Logging.debug("representatives $generation")
+        @debug("representatives $generation")
         nspecies = length(unique(species))
         reprs = Array{ctype}(undef, nspecies)
         for s in 1:nspecies
@@ -118,16 +118,16 @@ function cgpneat(ctype::DataType, nin::Int64, nout::Int64, fitness::Function;
         end
 
         # species sizes
-        Logging.debug("species sizes $generation $nspecies")
+        @debug("species sizes $generation $nspecies")
         spec_sizes = species_sizes(fits, species)
         new_pop = Array{ctype}(undef, Config.ga_population)
         new_fits = -Inf*ones(Float64, Config.ga_population)
         popi = 1
 
         # create new population
-        Logging.debug("new population $generation $spec_sizes")
+        @debug("new population $generation $spec_sizes")
         for s in 1:nspecies
-            Logging.debug("species $s")
+            @debug("species $s")
             sfits = fits[species.==s]
             spec = population[species.==s]
             ncross = round(spec_sizes[s] * Config.ga_crossover_rate)
@@ -147,7 +147,7 @@ function cgpneat(ctype::DataType, nin::Int64, nout::Int64, fitness::Function;
             end
 
             # crossover
-            Logging.debug("Crossover $s popi: $popi, ncross: $ncross")
+            @debug("Crossover $s popi: $popi, ncross: $ncross")
             for i in 1:ncross
                 p1 = spec[species_selection(sfits)]
                 p2 = spec[species_selection(sfits)]
@@ -160,7 +160,7 @@ function cgpneat(ctype::DataType, nin::Int64, nout::Int64, fitness::Function;
             end
 
             # mutation
-            Logging.debug("Mutation $s popi: $popi, nmut: $nmut")
+            @debug("Mutation $s popi: $popi, nmut: $nmut")
             for i in 1:nmut
                 parent = spec[species_selection(sfits)]
                 child = mutate(parent)
@@ -176,7 +176,7 @@ function cgpneat(ctype::DataType, nin::Int64, nout::Int64, fitness::Function;
             end
 
             # copy
-            Logging.debug("Copy $s popi: $popi, ncopy: $ncopy")
+            @debug("Copy $s popi: $popi, ncopy: $ncopy")
             for i in 1:ncopy
                 new_pop[popi] = clone(spec[species_selection(sfits)])
                 new_fits[popi] = fits[popi]
@@ -188,7 +188,7 @@ function cgpneat(ctype::DataType, nin::Int64, nout::Int64, fitness::Function;
             end
         end
 
-        Logging.debug("variable set $generation")
+        @debug("variable set $generation")
         species = speciation(new_pop, reprs, distance)
         population = new_pop
         fits = new_fits
@@ -200,7 +200,7 @@ function cgpneat(ctype::DataType, nin::Int64, nout::Int64, fitness::Function;
                 fits[i] = -Inf
             end
         end
-        Logging.debug("done $generation")
+        @debug("done $generation")
     end
 
     max_fit, best.genes

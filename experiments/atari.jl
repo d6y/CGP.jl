@@ -2,6 +2,8 @@ using ArcadeLearningEnvironment
 using CGP
 using Logging
 using ArgParse
+using Printf
+using Random
 import Images
 
 CGP.Config.init("cfg/atari.yaml")
@@ -10,15 +12,15 @@ function play_atari(c::Chromosome, id::String, seed::Int64;
                     render::Bool=false, folder::String=".", max_frames=18000)
     game = Game(id, seed)
     seed_reset = rand(0:100000)
-    srand(seed)
+    Random.seed!(seed)
     reward = 0.0
     frames = 0
     p_action = game.actions[1]
     outputs = zeros(Int64, c.nout)
     while ~game_over(game.ale)
         output = process(c, get_rgb(game))
-        outputs[indmax(output)] += 1
-        action = game.actions[indmax(output)]
+        outputs[argmax(output)] += 1
+        action = game.actions[argmax(output)]
         reward += act(game.ale, action)
         if rand() < 0.25
             reward += act(game.ale, action) # repeat action here for seeding
@@ -30,12 +32,12 @@ function play_atari(c::Chromosome, id::String, seed::Int64;
         end
         frames += 1
         if frames > max_frames
-            Logging.debug(string("Termination due to frame count on ", id))
+            @debug(string("Termination due to frame count on ", id))
             break
         end
     end
     close!(game)
-    srand(seed_reset)
+    Random.seed!(seed_reset)
     reward, outputs
 end
 
@@ -108,8 +110,8 @@ if ~isinteractive()
     CGP.Config.init(Dict([k=>args[k] for k in setdiff(
         keys(args), ["seed", "log", "id", "ea", "chromosome"])]...))
 
-    srand(args["seed"])
-    Logging.configure(filename=args["log"], level=INFO)
+    Random.seed!(args["seed"])
+    global_logger(SimpleLogger(open(args["log"], "a+")))
     nin, nout = get_params(args)
     ea = eval(Meta.parse(args["ea"]))
     ctype = eval(Meta.parse(args["chromosome"]))
@@ -120,7 +122,7 @@ if ~isinteractive()
                       seed=args["seed"], id=args["id"], ctype=ctype)
 
     # Note: -maxfit is returned, being the "cost" to be minimized by irace
-    Logging.info(@sprintf("E%0.6f", -maxfit))
+    @info(@sprintf("E%0.6f", -maxfit))
     if args["render"]
         render_genes(best, args; ctype=ctype)
     end

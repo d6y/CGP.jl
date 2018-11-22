@@ -137,8 +137,8 @@ functions:
     - "cos.(x)"
   f_sqrtxy:
     - "sqrt.(x*x+y*y)/sqrt(2.0)"
-    - "sqrt.(x*x+y.*y)/sqrt(2.0)"
-    - "sqrt.(x.*x+y*y)/sqrt(2.0)"
+    - "sqrt.(x*x .+ y.*y)/sqrt(2.0)"
+    - "sqrt.(x.*x .+ y*y)/sqrt(2.0)"
     - "sqrt.(.+(eqsize(x.*x, y.*y, c)...))/sqrt(2.0)"
   f_acos:
     - "acos.(x)/pi"
