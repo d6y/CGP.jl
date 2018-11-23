@@ -82,7 +82,7 @@ function render_genes(genes::Array{Float64}, args::Dict;
                     ctype::DataType=CGPChromo, id::Int64=0)
     nin, nout = get_params(args)
     chromo = ctype(genes, nin, nout)
-    folder = string("frames/", args["id"], "_", args["seed"], "_", id)
+    folder = joinpath("frames", string(args["id"], "_", args["seed"], "_", id))
     mkpath(folder)
     reward, out_counts = play_atari(chromo, args["id"], args["seed"];
                                     render=true, folder=folder,
@@ -102,7 +102,8 @@ function render_genes(genes::Array{Float64}, args::Dict;
     active_outputs = out_counts .> 0
     chromo2 = ctype(new_genes, nin, nout)
     mkpath("graphs")
-    file = string("graphs/", args["id"], "_", args["seed"], "_", id, ".pdf");
+    filename = string(args["id"], "_", args["seed"], "_", id, ".pdf");
+    file = abspath(joinpath("graphs", filename))
     chromo_draw(chromo2, file; active_outputs=active_outputs)
 end
 
