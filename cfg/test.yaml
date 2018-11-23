@@ -52,7 +52,7 @@ functions:
     - x.*y
     - ".*(eqsize(x,y,c)...)"
   f_inv:
-    - "scaled(1./x)"
+    - "scaled(1 ./x)"
   f_nans:
     - "scaled(NaN)"
     - "scaled([NaN, NaN, NaN])"

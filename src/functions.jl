@@ -18,7 +18,7 @@ function scaled(x::Float64)
 end
 
 function scaled(x::Array{Float64})
-    x[isnan.(x)] = 0.0
+    x[isnan.(x)] .= 0.0
     min.(max.(x, -1.0), 1.0)
 end
 
@@ -87,12 +87,6 @@ function range_in(list::Array{Float64}, xi::Array{Float64}, yi::Float64)
     range_in(list, mean(xi), yi)
 end
 
-function scaled_indmax(x::Array{Float64})
-    scaled(collect((ind2sub(x, indmax(x)) .- 1) ./ (size(x) .- 1)))
-end
-
-scaled_indmax(x::Array{Float64}, y::Array{Float64}) = scaled_indmax(x)
-
 function com(x::Array{Float64})
     # TODO: speed up
     com = Tuple(zeros(ndims(x)))
@@ -131,7 +125,7 @@ function eqsize(x::Array{Float64}, y::Array{Float64}, c::Float64)
 end
 
 function sgen(name::String, s1::String, s2::String, s3::String, s4::String)
-    eval(parse(string(name,
+    eval(Meta.parse(string(name,
                       "(x::Float64, y::Float64, c::Float64=0.0)=",
                       s1, ";", name,
                       "(x::Float64, y::Array{Float64}, c::Float64=0.0)=",
@@ -145,8 +139,8 @@ end
 function load_functions(funs::Dict)
     newfuns = []
     for k in keys(funs)
-        if isdefined(Config, parse(k))
-            debug("Loading functions: $k is already defined, skipping")
+        if isdefined(Config, Meta.parse(k))
+            @debug("Loading functions: $k is already defined, skipping")
         else
             if length(funs[k])==1
                 sgen(k, funs[k][1], funs[k][1], funs[k][1], funs[k][1])
@@ -158,5 +152,5 @@ function load_functions(funs::Dict)
             append!(newfuns, [k])
         end
     end
-    [eval(parse(k)) for k in newfuns]
+    [eval(Meta.parse(k)) for k in newfuns]
 end

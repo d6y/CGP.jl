@@ -1,4 +1,4 @@
-using Base.Test
+using Test
 using CGP
 
 const global D = 2
@@ -23,7 +23,7 @@ end
             @testset "$file $f" begin
                 println("$file $f")
                 for d in 1:D
-                    for s in Int64.(round.(linspace(1, smax, snum)))
+                    for s in Int64.(round.(range(1, stop=smax, length=snum)))
                         for cval in -1:1:1
                             cval = Float64(cval)
                             test_inps(f, [cval, cval, cval])
@@ -42,14 +42,14 @@ end
                                       2*rand()-1,
                                       2*rand()-1])
                         test_inps(f, [2*rand()-1,
-                                      2*rand(repeat([s], inner=d)...)-1,
+                                      2*rand(repeat([s], inner=d)...) .- 1,
                                       2*rand()-1])
-                        test_inps(f, [2*rand(repeat([s], inner=d)...)-1,
+                        test_inps(f, [2*rand(repeat([s], inner=d)...) .- 1,
                                       2*rand()-1,
                                       2*rand()-1])
                         for dy in 1:D
-                            test_inps(f, [2*rand(repeat([s], inner=d)...)-1,
-                                          2*rand(repeat([s], inner=dy)...)-1,
+                            test_inps(f, [2*rand(repeat([s], inner=d)...) .- 1,
+                                          2*rand(repeat([s], inner=dy)...) .- 1,
                                           2*rand()-1])
                         end
                     end

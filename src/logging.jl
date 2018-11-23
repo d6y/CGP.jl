@@ -1,4 +1,6 @@
 export log_best, log_all
+using Logging
+using Printf
 
 function log_best(id::String, seed::Int64, eval_count::Int64, max_fit::Float64,
                   best::Chromosome, ea::Function, ctype::DataType, log_gen::Bool)
@@ -12,11 +14,12 @@ function log_best(id::String, seed::Int64, eval_count::Int64, max_fit::Float64,
                             @sprintf("%s %s %s",
                                      string(ea), string(ctype), Config.to_string()))
         end
-        Logging.info(logstr)
+        @info(logstr)
     end
     if Config.save_best
-        Logging.info(@sprintf("C: %s", string(best.genes)))
+        @info(@sprintf("C: %s", string(best.genes)))
     end
+    flush(current_logger().stream)
     nothing
 end
 

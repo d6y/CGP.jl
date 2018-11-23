@@ -2,23 +2,26 @@ using ArcadeLearningEnvironment
 using CGP
 using Logging
 using ArgParse
+using Printf
+using Random
 import Images
 
 CGP.Config.init("cfg/atari.yaml")
+include("../graphing/graph_utils.jl")
 
 function play_atari(c::Chromosome, id::String, seed::Int64;
                     render::Bool=false, folder::String=".", max_frames=18000)
     game = Game(id, seed)
     seed_reset = rand(0:100000)
-    srand(seed)
+    Random.seed!(seed)
     reward = 0.0
     frames = 0
     p_action = game.actions[1]
     outputs = zeros(Int64, c.nout)
     while ~game_over(game.ale)
         output = process(c, get_rgb(game))
-        outputs[indmax(output)] += 1
-        action = game.actions[indmax(output)]
+        outputs[argmax(output)] += 1
+        action = game.actions[argmax(output)]
         reward += act(game.ale, action)
         if rand() < 0.25
             reward += act(game.ale, action) # repeat action here for seeding
@@ -30,12 +33,12 @@ function play_atari(c::Chromosome, id::String, seed::Int64;
         end
         frames += 1
         if frames > max_frames
-            Logging.debug(string("Termination due to frame count on ", id))
+            @debug(string("Termination due to frame count on ", id))
             break
         end
     end
     close!(game)
-    srand(seed_reset)
+    Random.seed!(seed_reset)
     reward, outputs
 end
 
@@ -59,8 +62,8 @@ end
 function get_bests(logfile::String)
     bests = []
     for line in readlines(logfile)
-        if contains(line, ":C:")
-            genes = eval(parse(split(line, ":C: ")[2]))
+        if occursin("C:", line)
+            genes = eval(Meta.parse(split(line, "C: ")[2]))
             append!(bests, [genes])
         end
     end
@@ -77,10 +80,9 @@ end
 
 function render_genes(genes::Array{Float64}, args::Dict;
                     ctype::DataType=CGPChromo, id::Int64=0)
-    include("graphing/graph_utils.jl")
     nin, nout = get_params(args)
     chromo = ctype(genes, nin, nout)
-    folder = string("frames/", args["id"], "_", args["seed"], "_", id)
+    folder = joinpath("frames", string(args["id"], "_", args["seed"], "_", id))
     mkpath(folder)
     reward, out_counts = play_atari(chromo, args["id"], args["seed"];
                                     render=true, folder=folder,
@@ -99,7 +101,9 @@ function render_genes(genes::Array{Float64}, args::Dict;
     end
     active_outputs = out_counts .> 0
     chromo2 = ctype(new_genes, nin, nout)
-    file =  string("graphs/", args["id"], "_", args["seed"], "_", id, ".pdf");
+    mkpath("graphs")
+    filename = string(args["id"], "_", args["seed"], "_", id, ".pdf");
+    file = abspath(joinpath("graphs", filename))
     chromo_draw(chromo2, file; active_outputs=active_outputs)
 end
 
@@ -108,11 +112,11 @@ if ~isinteractive()
     CGP.Config.init(Dict([k=>args[k] for k in setdiff(
         keys(args), ["seed", "log", "id", "ea", "chromosome"])]...))
 
-    srand(args["seed"])
-    Logging.configure(filename=args["log"], level=INFO)
+    Random.seed!(args["seed"])
+    global_logger(SimpleLogger(open(args["log"], "a+")))
     nin, nout = get_params(args)
-    ea = eval(parse(args["ea"]))
-    ctype = eval(parse(args["chromosome"]))
+    ea = eval(Meta.parse(args["ea"]))
+    ctype = eval(Meta.parse(args["chromosome"]))
 
     fit = x->play_atari(x, args["id"], args["seed"];
                         max_frames=args["frames"])[1]
@@ -120,7 +124,7 @@ if ~isinteractive()
                       seed=args["seed"], id=args["id"], ctype=ctype)
 
     # Note: -maxfit is returned, being the "cost" to be minimized by irace
-    Logging.info(@sprintf("E%0.6f", -maxfit))
+    @info(@sprintf("E%0.6f", -maxfit))
     if args["render"]
         render_genes(best, args; ctype=ctype)
     end

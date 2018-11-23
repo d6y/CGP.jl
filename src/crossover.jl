@@ -34,15 +34,15 @@ function random_outputs(c1::Chromosome, c2::Chromosome)
     # not a full crossover operator
     child_outputs = zeros(c1.nout)
     parent = bitrand(c1.nout)
-    child_outputs[parent] = c1.genes[c1.nin+(1:c1.nout)][parent]
-    child_outputs[.~(parent)] = c2.genes[c1.nin+(1:c1.nout)][.~(parent)]
+    child_outputs[parent] = c1.genes[c1.nin .+ (1:c1.nout)][parent]
+    child_outputs[.~(parent)] = c2.genes[c1.nin .+ (1:c1.nout)][.~(parent)]
     child_outputs
 end
 
 function random_node_crossover(c1::Chromosome, c2::Chromosome)
     # take random nodes from each parent equally, up to the size of the smaller parent
     min_nodes = min(length(c1.nodes)-c1.nin, length(c2.nodes)-c2.nin)
-    p_nodes = c1.nin + (1:min_nodes)[bitrand(min_nodes)]
+    p_nodes = c1.nin .+ (1:min_nodes)[bitrand(min_nodes)]
     p1_node_genes = get_genes(c1, (1:length(c1.nodes))[p_nodes])
     p2_node_genes = get_genes(c2, (1:length(c2.nodes))[p_nodes])
     genes = [random_inputs(c1, c2); random_outputs(c1, c2); p1_node_genes; p2_node_genes]
@@ -54,12 +54,12 @@ function aligned_node_crossover(c1::Chromosome, c2::Chromosome)
     p1_pos = get_positions(c1)
     p2_pos = get_positions(c2)
     min_nodes = min(length(c1.nodes)-c1.nin, length(c2.nodes)-c2.nin)
-    p1_inds = c1.nin + collect(1:min_nodes)
-    p1_nodes = Array{Int64}(0)
-    p2_nodes = Array{Int64}(0)
-    for node in c1.nin+(1:min_nodes)
+    p1_inds = c1.nin .+ collect(1:min_nodes)
+    p1_nodes = Array{Int64}(undef, 0)
+    p2_nodes = Array{Int64}(undef, 0)
+    for node in c1.nin .+ (1:min_nodes)
         if rand() < 0.5
-            i = indmin(abs.(p1_pos[p1_inds] - p2_pos[node]))
+            i = argmin(abs.(p1_pos[p1_inds] .- p2_pos[node]))
             append!(p1_nodes, [p1_inds[i]])
             p1_inds = deleteat!(p1_inds, i)
         else
@@ -72,7 +72,7 @@ function aligned_node_crossover(c1::Chromosome, c2::Chromosome)
 end
 
 function proportional_crossover(c1::Chromosome, c2::Chromosome)
-    genes = Array{Float64}(0)
+    genes = Array{Float64}(undef, 0)
     if length(c1.genes) == length(c2.genes)
         r = rand(length(c1.genes))
         genes = ((1 .- r) .* c1.genes) .+ (r .* c2.genes)
@@ -91,9 +91,9 @@ end
 function output_graph_crossover(c1::Chromosome, c2::Chromosome)
     # split outputs equally between parents, then construct a child from their
     # corresponding input graphs
-    p1_nodes = Array{Int64}(0)
-    p2_nodes = Array{Int64}(0)
-    output_genes = Array{Float64}(0)
+    p1_nodes = Array{Int64}(undef, 0)
+    p2_nodes = Array{Int64}(undef, 0)
+    output_genes = Array{Float64}(undef, 0)
     for output in 1:c1.nout
         if rand() < 0.5
             append!(p1_nodes, get_output_trace(c1, output))
@@ -105,18 +105,18 @@ function output_graph_crossover(c1::Chromosome, c2::Chromosome)
     end
     p1_nodes = sort!(unique(p1_nodes))
     p2_nodes = sort!(unique(p2_nodes))
-    input_genes = Array{Float64}(0)
+    input_genes = Array{Float64}(undef, 0)
     # take inputs from either parent trace, if they are in the parent traces
     for input in 1:c1.nin
         gene = c1.genes[input]
-        if contains(==, p1_nodes, input)
-            if contains(==, p2_nodes, input)
+        if any(y -> y == input, p1_nodes)
+            if any(y -> y == input, p2_nodes)
                 if rand() < 0.5
                     gene = c2.genes[input]
                 end
             end
         else
-            if contains(==, p2_nodes, input)
+            if any(y -> y == input, p2_nodes)
                 gene = c2.genes[input]
             else
                 if rand() < 0.5
@@ -178,5 +178,5 @@ function subgraph_crossover(c1::Chromosome, c2::Chromosome)
 end
 
 function crossover(c1::Chromosome, c2::Chromosome)
-    eval(parse(string(Config.crossover_method)))(c1, c2)
+    eval(Meta.parse(string(Config.crossover_method)))(c1, c2)
 end

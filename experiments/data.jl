@@ -1,14 +1,17 @@
 using CGP
 using Logging
 using ArgParse
+using Random
+using DelimitedFiles
+using Printf
 
 function read_data(dfile::String)
     df = open(dfile, "r")
-    meta = [parse(split(readline(df), ' ')[2]) for i=1:4]
+    meta = [Meta.parse(split(readline(df), ' ')[2]) for i=1:4]
     data = Float64.(readdlm(dfile, ' ', skipstart=4))
     training = data[1:meta[3], :]
-    test = data[meta[3]+(1:meta[4]), :]
-    meta[1], meta[2], training', test'
+    test = data[meta[3] .+ (1:meta[4]), :]
+    meta[1], meta[2], copy(training'), copy(test')
 end
 
 function classify(c::Chromosome, data::Array{Float64}, nin::Int64, nout::Int64)
@@ -16,7 +19,7 @@ function classify(c::Chromosome, data::Array{Float64}, nin::Int64, nout::Int64)
     nsamples = size(data, 2)
     for d in 1:nsamples
         outputs = process(c, data[1:nin, d])
-        if indmax(outputs) == indmax(data[nin+(1:nout), d])
+        if argmax(outputs) == argmax(data[nin .+ (1:nout), d])
             accuracy += 1
         end
     end
@@ -66,12 +69,12 @@ CGP.Config.init(Dict([k=>args[k] for k in setdiff(
     keys(args), ["seed", "data", "log", "fitness", "ea",
                  "chromosome", "cfg"])]...))
 
-srand(args["seed"])
-Logging.configure(filename=args["log"], level=INFO)
+Random.seed!(args["seed"])
+global_logger(SimpleLogger(open(args["log"], "a+")))
 nin, nout, train, test = read_data(args["data"])
-fitness = eval(parse(args["fitness"]))
-ea = eval(parse(args["ea"]))
-ctype = eval(parse(args["chromosome"]))
+fitness = eval(Meta.parse(args["fitness"]))
+ea = eval(Meta.parse(args["ea"]))
+ctype = eval(Meta.parse(args["chromosome"]))
 
 fit = x->fitness(x, train, nin, nout)
 refit = x->fitness(x, test, nin, nout)
@@ -80,9 +83,9 @@ maxfit, best = ea(nin, nout, fit; seed=args["seed"], ctype=ctype,
 
 best_ind = ctype(best, nin, nout)
 test_fit = fitness(best_ind, test, nin, nout)
-Logging.info(@sprintf("T: %d %0.8f %0.8f %d %d %s %s",
+@info(@sprintf("T: %d %0.8f %0.8f %d %d %s %s",
                       args["seed"], maxfit, test_fit,
                       sum([n.active for n in best_ind.nodes]),
                       length(best_ind.nodes), args["ea"], args["chromosome"]))
 
-Logging.info(@sprintf("E%0.8f", -maxfit))
+@info(@sprintf("E%0.8f", -maxfit))

@@ -2,6 +2,8 @@
 # chromosomes, but assuming a [input, output, node1, node2, ...] gene structure
 # when necessary. Some chromosomes will need to override these functions.
 
+using Random
+
 export gene_mutate,
     active_gene_mutate,
     add_nodes,
@@ -66,7 +68,7 @@ function delete_nodes(c::Chromosome)
             return clone(c)
         end
     end
-    deletes = c.nin + randperm(length(c.nodes)-c.nin)[1:n_dels]
+    deletes = c.nin .+ randperm(length(c.nodes)-c.nin)[1:n_dels]
     child_nodes = setdiff((c.nin+1):length(c.nodes), deletes)
     genes = [c.genes[1:(c.nin+c.nout)]; get_genes(c, child_nodes)]
     typeof(c)(genes, c.nin, c.nout)
@@ -80,8 +82,8 @@ function add_subtree(c::Chromosome)
     poses = rand(n_adds)
     sort!(poses)
     cpos = get_positions(c)
-    c1 = Array{Float64,1}(n_adds)
-    c2 = Array{Float64,1}(n_adds)
+    c1 = Array{Float64,1}(undef, n_adds)
+    c2 = Array{Float64,1}(undef, n_adds)
     for n in 1:n_adds
         pos_set = [poses[1:n]; rand(cpos[cpos .< poses[n]], n)]
         c1[n] = rand(pos_set)
@@ -124,17 +126,17 @@ function mixed_mutate(c::Chromosome, add_f::Function, del_f::Function)
     # Fixed modify mutation rate, adaptive add and delete
     method = rand()
     if method < Config.modify_mutation_rate
-        debug("Gene mutate")
+        @debug("Gene mutate")
         return gene_mutate(c)
     else
         method = (method - Config.modify_mutation_rate) / (1.0 - Config.modify_mutation_rate)
         add_rate = (length(c.nodes) - Config.starting_nodes)/(
             Config.node_size_cap - Config.starting_nodes)
         if method < add_rate
-            debug("Add mutation")
+            @debug("Add mutation")
             return add_f(c)
         else
-            debug("Delete mutate")
+            @debug("Delete mutate")
             return del_f(c)
         end
     end
@@ -148,13 +150,13 @@ function adaptive_mutate(c::Chromosome, add_f::Function, del_f::Function)
     modify_rate = d/(d+1)
     add_rate = (x-b)/((d+1)*(a-b))
     if method < modify_rate
-        debug("Gene mutate")
+        @debug("Gene mutate")
         return gene_mutate(c)
     elseif method < (modify_rate + add_rate)
-        debug("Add mutate")
+        @debug("Add mutate")
         return add_f(c)
     else
-        debug("Delete mutation")
+        @debug("Delete mutation")
         return del_f(c)
     end
 end
@@ -176,5 +178,5 @@ function adaptive_node_mutate(c::Chromosome)
 end
 
 function mutate(c::Chromosome)
-    eval(parse(string(Config.mutate_method)))(c)
+    eval(Meta.parse(string(Config.mutate_method)))(c)
 end

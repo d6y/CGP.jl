@@ -1,16 +1,19 @@
+using SharedArrays
+using Distributed
+using Random
 export GA
 
 function selection(fits::Array{Float64}, n::Int64=3)
     # return the index of the winner of a n-way tournament
     fshuffle = randperm(length(fits))[1:n]
-    winner = indmax(fits[fshuffle])
+    winner = argmax(fits[fshuffle])
     fshuffle[winner]
 end
 
 function GA(nin::Int64, nout::Int64, fitness::Function;
             ctype::DataType=CGPChromo, seed::Int64=0, expert::Any=nothing,
             id::String="")
-    population = Array{ctype}(Config.ga_population)
+    population = Array{ctype}(undef, Config.ga_population)
     fits = -Inf*ones(Float64, Config.ga_population)
     population = [ctype(nin, nout) for i in 1:Config.ga_population]
     best = population[1]
@@ -37,20 +40,23 @@ function GA(nin::Int64, nout::Int64, fitness::Function;
     while eval_count < Config.total_evals
         # evaluation
         log_gen = false
+        dfits = SharedArray{Float64}(Config.ga_population)
+        dfits .= fits
+        @sync @distributed for p=1:Config.ga_population
+            dfits[p] = fitness(population[p])
+        end
+        fits .= dfits
         for p in eachindex(population)
-            if fits[p] == -Inf
-                fit = fitness(population[p])
-                fits[p] = fit
-                eval_count += 1
-                if fit > max_fit
-                    max_fit = fit
-                    best = clone(population[p])
-                    log_gen = true
-                end
-                if eval_count == Config.total_evals
-                    log_gen = true
-                    break
-                end
+            fit = fits[p]
+            eval_count += 1
+            if fit > max_fit
+                max_fit = fit
+                best = clone(population[p])
+                log_gen = true
+            end
+            if eval_count == Config.total_evals
+                log_gen = true
+                break
             end
         end
 
@@ -62,7 +68,7 @@ function GA(nin::Int64, nout::Int64, fitness::Function;
         end
 
         # create new population
-        new_pop = Array{ctype}(Config.ga_population)
+        new_pop = Array{ctype}(undef, Config.ga_population)
         new_fits = -Inf*ones(Float64, Config.ga_population)
         popi = 1
 

@@ -1,19 +1,18 @@
 using CGP
 using Logging
-using Base.Test
+using Test
 
 CGP.Config.init("cfg/test.yaml")
-Logging.configure(level=INFO)
 
-info("Chromosome tests")
+@info("Chromosome tests")
 include("test/chromosome.jl")
-info("Mutation tests")
+@info("Mutation tests")
 include("test/mutation.jl")
-info("Crossover tests")
+@info("Crossover tests")
 include("test/crossover.jl")
-info("Distance tests")
+@info("Distance tests")
 include("test/distance.jl")
-info("Evolution tests")
+@info("Evolution tests")
 include("test/ea.jl")
-info("Function tests")
+@info("Function tests")
 include("test/functions.jl")

@@ -1,5 +1,7 @@
-using Base.Test
+using Test
 using CGP
+using Random
+
 CGP.Config.init("cfg/test.yaml")
 
 @testset "Simple fit" begin
@@ -44,7 +46,7 @@ end
     function rosenbrock_fit(c::Chromosome)
         diff = 0
         for i=1:10
-            inps = collect(linspace(0.0, i, 4))/10
+            inps = collect(range(0.0, stop=i, length=4))/10
             diff += (process(c, inps)[1] - rosenbrock(inps...))^2
         end
         -diff
