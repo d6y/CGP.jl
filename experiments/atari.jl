@@ -7,6 +7,7 @@ using Random
 import Images
 
 CGP.Config.init("cfg/atari.yaml")
+include("../graphing/graph_utils.jl")
 
 function play_atari(c::Chromosome, id::String, seed::Int64;
                     render::Bool=false, folder::String=".", max_frames=18000)
@@ -79,7 +80,6 @@ end
 
 function render_genes(genes::Array{Float64}, args::Dict;
                     ctype::DataType=CGPChromo, id::Int64=0)
-    include("graphing/graph_utils.jl")
     nin, nout = get_params(args)
     chromo = ctype(genes, nin, nout)
     folder = string("frames/", args["id"], "_", args["seed"], "_", id)
