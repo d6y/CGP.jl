@@ -16,29 +16,15 @@ the [CGP site](https://www.cartesiangp.com/).
 
 ## Installation
 
-Note currently only known to work with Julia v0.7
+Install [Julia v1.0](https://julialang.org/downloads/).
 
-#### Mac specific install of Julia v0.7
-
-- download it
-   ```
-  wget -P ~/Downloads https://julialang-s3.julialang.org/bin/mac/x64/0.7/julia-0.7.0-mac64.dmg
-  sudo hdiutil attach ~/Downloads/julia-0.7.0-mac64.dmg
-  ```
-- double click the newly mounted drive and drag Julia-0.7 to the Applications directory.
-
-- add julia to your path so you can use the command line (change .zshrc to .bashrc if using bash)
-  ```
-  echo export "PATH=/Applications/Julia-0.7.app/Contents/Resources/julia/bin:\$PATH" >> ~/.zshrc
-  ```
-
-#### Project dependencies
+## Project dependencies
 
 This project was created with roughly this configuration:
 
 ```julialang
 julia> ]
-(v0.7) pkg> activate .
+pkg> activate .
 (CGP.jl) pkg> add "https://github.com/d6y/ArcadeLearningEnvironment.jl.git"
 (CGP.jl) pkg> add PaddedViews Images Distributions YAML ArgParse TestImages Colors QuartzImageIO
 (CGP.jl) pkg> add LightGraphs MetaGraphs TikzGraphs ImageTransformations ImageMagick
@@ -115,10 +101,21 @@ included as an alternative to the mujoco environments used by OpenAI. Please see
 the PyCall.jl documentation for setting up a python environment with the
 necessary packages (`gym` and `pybullet`).
 
+For example, to install gym globally:
+
+```
+$ pip install gym
+$ pip install pybullet
+$ PYTHON=`which python` julia
+julia> ]
+pkg> add PyCall
+pkg> build PyCall
+```
+
 To evolve a program for the `MountainCarContinuous-v0` environment, run:
 
 ```bash
-julia project=. experiments/gym.jl --total_evals 200 --seed 1
+julia --project=. experiments/gym.jl --total_evals 200 --seed 1
 ```
 
 ### Atari
