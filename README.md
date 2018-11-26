@@ -62,7 +62,7 @@ julia --project=. experiments/xor.jl
 but various options can be set using command line arguments:
 
 ```bash
-julia experiments/xor.jl --nbits 5 --nsamples 30
+julia --project=. experiments/xor.jl --nbits 5 --nsamples 30
 ```
 
 ### Data tasks
@@ -139,7 +139,7 @@ mkdir ~/.julia/packages/ArcadeLearningEnvironment/x1HHl/deps/rom_files
 Once ROMs have been configured, a CGP agent can be evolved using:
 
 ```bash
-julia experiments/atari.jl --id boxing
+julia --project=. experiments/atari.jl --id boxing
 ```
 
 This requires a long runtime. Parallelizing evaluations is a currently planned
