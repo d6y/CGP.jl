@@ -131,9 +131,9 @@ scalar actions.) ROMs are available from
 Create `rom_files` folder:
 
 ```bash
-mkdir ~/.julia/v0.7/ArcadeLearningEnvironment/deps/rom_files
-
+mkdir ~/.julia/packages/ArcadeLearningEnvironment/x1HHl/deps/rom_files
 ```
+
 ...and copy ROM files there.
 
 Once ROMs have been configured, a CGP agent can be evolved using:
@@ -157,7 +157,6 @@ $ irace --check --parallel 2
 ...and check the `irace_logs` folder for logs.
 
 Review the settings of `MAX_FRAMES` and `TOTAL_EVALS` in the `target-runner` script.
-
 
 
 ## Configuration
