@@ -86,7 +86,7 @@ end
             @testset "$ea $ct" begin
                 mandrill = Float64.(Gray.(testimage("mandrill")))
                 mandrill /= maximum(mandrill)
-                inps = [rand(size(mandrill)) for i in 1:3]
+                inps = [rand(Float64, size(mandrill)) for i in 1:3]
                 outs = zeros(3)
                 correct = rand(1:3)
                 inps[correct] = mandrill
