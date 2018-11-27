@@ -6,7 +6,7 @@ version = "0.3.2"
 
 [[ArcadeLearningEnvironment]]
 deps = ["BinDeps", "Colors", "ImageCore", "ImageTransformations", "Libdl"]
-git-tree-sha1 = "f6df731494acca487554befc9249ad61d023a6f9"
+git-tree-sha1 = "b80fd22dff6d88823dfb1a7456e6958949cf8ea7"
 repo-rev = "master"
 repo-url = "https://github.com/d6y/ArcadeLearningEnvironment.jl.git"
 uuid = "91b264d3-66f8-490e-9e15-d9e1de5befb2"
@@ -267,9 +267,9 @@ uuid = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
 
 [[Interpolations]]
 deps = ["AxisAlgorithms", "LinearAlgebra", "OffsetArrays", "Random", "Ratios", "SharedArrays", "SparseArrays", "StaticArrays", "Test", "WoodburyMatrices"]
-git-tree-sha1 = "2a3b97b4f4cd6f6be5c73f07b15a30e9eaba465d"
+git-tree-sha1 = "3493536a64dae5a21c0cc8aecf680647f3e12313"
 uuid = "a98d9a8b-a2ab-59e6-89dd-64a1c18fca59"
-version = "0.10.6"
+version = "0.11.0"
 
 [[IntervalSets]]
 deps = ["Compat"]
@@ -397,9 +397,11 @@ version = "0.8.0"
 
 [[PyCall]]
 deps = ["Compat", "Conda", "MacroTools", "Statistics", "VersionParsing"]
-git-tree-sha1 = "ce4681263f41d98b3faf6107b28284bf8b866f5f"
+git-tree-sha1 = "468fb4776830d0600fb939fcec54778553a0c50d"
+repo-rev = "master"
+repo-url = "https://github.com/JuliaPy/PyCall.jl"
 uuid = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
-version = "1.18.5"
+version = "1.18.5+"
 
 [[QuadGK]]
 deps = ["DataStructures", "LinearAlgebra", "Test"]
@@ -510,9 +512,9 @@ uuid = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 
 [[StatsBase]]
 deps = ["DataStructures", "LinearAlgebra", "Missings", "Printf", "Random", "SortingAlgorithms", "SparseArrays", "Statistics", "Test"]
-git-tree-sha1 = "723193a13e8078cec6dcd0b8fe245c8bfd81690e"
+git-tree-sha1 = "2722397d88f8ffef551948f6c20e1d74a743298c"
 uuid = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
-version = "0.25.0"
+version = "0.26.0"
 
 [[StatsFuns]]
 deps = ["Rmath", "SpecialFunctions", "Test"]
