@@ -16,29 +16,15 @@ the [CGP site](https://www.cartesiangp.com/).
 
 ## Installation
 
-Note currently only known to work with Julia v0.7
+Install [Julia v1.0](https://julialang.org/downloads/).
 
-#### Mac specific install of Julia v0.7
-
-- download it
-   ```
-  wget -P ~/Downloads https://julialang-s3.julialang.org/bin/mac/x64/0.7/julia-0.7.0-mac64.dmg
-  sudo hdiutil attach ~/Downloads/julia-0.7.0-mac64.dmg
-  ```
-- double click the newly mounted drive and drag Julia-0.7 to the Applications directory.
-
-- add julia to your path so you can use the command line (change .zshrc to .bashrc if using bash)
-  ```
-  echo export "PATH=/Applications/Julia-0.7.app/Contents/Resources/julia/bin:\$PATH" >> ~/.zshrc
-  ```
-
-#### Project dependencies
+## Project dependencies
 
 This project was created with roughly this configuration:
 
 ```julialang
 julia> ]
-(v0.7) pkg> activate .
+pkg> activate .
 (CGP.jl) pkg> add "https://github.com/d6y/ArcadeLearningEnvironment.jl.git"
 (CGP.jl) pkg> add PaddedViews Images Distributions YAML ArgParse TestImages Colors QuartzImageIO
 (CGP.jl) pkg> add LightGraphs MetaGraphs TikzGraphs ImageTransformations ImageMagick
@@ -76,7 +62,7 @@ julia --project=. experiments/xor.jl
 but various options can be set using command line arguments:
 
 ```bash
-julia experiments/xor.jl --nbits 5 --nsamples 30
+julia --project=. experiments/xor.jl --nbits 5 --nsamples 30
 ```
 
 ### Data tasks
@@ -115,10 +101,21 @@ included as an alternative to the mujoco environments used by OpenAI. Please see
 the PyCall.jl documentation for setting up a python environment with the
 necessary packages (`gym` and `pybullet`).
 
+For example, to install gym globally:
+
+```
+$ pip install gym
+$ pip install pybullet
+$ PYTHON=`which python` julia
+julia> ]
+pkg> add PyCall
+pkg> build PyCall
+```
+
 To evolve a program for the `MountainCarContinuous-v0` environment, run:
 
 ```bash
-julia project=. experiments/gym.jl --total_evals 200 --seed 1
+julia --project=. experiments/gym.jl --total_evals 200 --seed 1
 ```
 
 ### Atari
@@ -134,15 +131,15 @@ scalar actions.) ROMs are available from
 Create `rom_files` folder:
 
 ```bash
-mkdir ~/.julia/v0.7/ArcadeLearningEnvironment/deps/rom_files
-
+mkdir ~/.julia/packages/ArcadeLearningEnvironment/x1HHl/deps/rom_files
 ```
+
 ...and copy ROM files there.
 
 Once ROMs have been configured, a CGP agent can be evolved using:
 
 ```bash
-julia experiments/atari.jl --id boxing
+julia --project=. experiments/atari.jl --id boxing
 ```
 
 This requires a long runtime. Parallelizing evaluations is a currently planned
@@ -160,7 +157,6 @@ $ irace --check --parallel 2
 ...and check the `irace_logs` folder for logs.
 
 Review the settings of `MAX_FRAMES` and `TOTAL_EVALS` in the `target-runner` script.
-
 
 
 ## Configuration

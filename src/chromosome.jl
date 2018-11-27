@@ -141,7 +141,7 @@ function node_genes(c::Chromosome)
 end
 
 function get_genes(c::Chromosome, node_id::Int64)
-    c.genes[(c.nin+c.nout)+((node_id-1-c.nin)*node_genes(c))+(1:node_genes(c))]
+    c.genes[(c.nin+c.nout)+((node_id-1-c.nin)*node_genes(c)) .+ (1:node_genes(c))]
 end
 
 function get_genes(c::Chromosome, nodes::Array{Int64})

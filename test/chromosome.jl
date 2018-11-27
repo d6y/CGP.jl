@@ -15,7 +15,7 @@ CGP.Config.init("cfg/test.yaml")
             @test c.nout == nout
         end
         @testset "Genes $ct" begin
-            newgenes = rand(size(c.genes))
+            newgenes = rand(Float64, size(c.genes))
             d = ct(newgenes, nin, nout)
             @test c != d
             @test c.genes != d.genes
