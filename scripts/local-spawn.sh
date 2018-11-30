@@ -7,7 +7,7 @@
 #   $ cd CGP.jl
 #   $ ./scripts/local-spawn.sh > spawn-`date +%Y%m%dZ%H%M%S`.out
 
-SEEDS=( 1  2 3 4 )
+SEEDS=( 1 2 3 4 )
 GAMES=( "space_invaders" "asteroids" )
 
 MAX_FRAMES=18000  # Control number of frames in each game
@@ -20,6 +20,7 @@ echo "Starting `pwd` $0 at `TZ=UTC date`"
 echo "Host: `hostname`"
 echo "Arch: `uname -a`"
 echo "Julia: `julia --version`"
+echo "CPUs: `julia -e 'Sys.cpu_summary()'`"
 echo "Git revision: `git log -1 --oneline`"
 
 echo " "
@@ -36,7 +37,7 @@ do
   do
     base=${LOG_DIR}/${game}_${seed}
     echo "- ${base}"
-    nohup julia --project=. experiments/atari.jl --frames ${MAX_FRAMES} --total_evals ${TOTAL_EVALS} --seed $seed --log ${base}.log 1> ${base}.out 2> ${base}.err &
+    nohup julia --project=. experiments/atari.jl --id ${game} --frames ${MAX_FRAMES} --total_evals ${TOTAL_EVALS} --seed $seed --log ${base}.log 1> ${base}.out 2> ${base}.err &
   done
 done
 
