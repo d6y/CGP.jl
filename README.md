@@ -33,7 +33,16 @@ pkg> activate .
 (CGP.jl) pkg> <delete><delete>
 ```
 
-You should not need to re-run those commands.
+You should not need to re-run all those commands, just:
+
+```
+$ cd CGP.jl
+$ julia --project=.
+julia> ]
+pkg> build
+pkg> <delete>
+julia> exit()
+```
 
 ## Tests
 
