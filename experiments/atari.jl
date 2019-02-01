@@ -12,6 +12,12 @@ include("../graphing/graph_utils.jl")
 function play_atari(c::Chromosome, id::String, seed::Int64;
                     render::Bool=false, folder::String=".", max_frames=18000)
     game = Game(id, seed)
+
+    if get_float(game, "repeat_action_probability") != 0.0
+        # We implement action repeating already, so we don't want it enabled in A.L.E. too.
+        error("A.L.E. is configured with non-zero repeat_action_probability")
+    end
+
     seed_reset = rand(0:100000)
     Random.seed!(seed)
     reward = 0.0
