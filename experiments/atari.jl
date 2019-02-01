@@ -1,15 +1,15 @@
-using ArcadeLearningEnvironment
-using CGP
-using Logging
-using ArgParse
-using Printf
-using Random
-import Images
+@everywhere using ArcadeLearningEnvironment
+@everywhere using CGP
+@everywhere using Logging
+@everywhere using ArgParse
+@everywhere using Printf
+@everywhere using Random
+@everywhere import Images
 
-CGP.Config.init("cfg/atari.yaml")
+@everywhere CGP.Config.init("cfg/atari.yaml")
 include("../graphing/graph_utils.jl")
 
-function play_atari(c::Chromosome, id::String, seed::Int64;
+@everywhere function play_atari(c::Chromosome, id::String, seed::Int64;
                     render::Bool=false, folder::String=".", max_frames=18000)
     game = Game(id, seed)
 

@@ -1,9 +1,11 @@
 export oneplus
 
+using Distributed
+
 function oneplus(nin::Int64, nout::Int64, fitness::Function;
                  ctype::DataType=CGPChromo, seed::Int64=0, expert::Any=nothing,
                  id::String="")
-    population = Array{ctype}(undef ,Config.lambda)
+    population = Array{ctype}(undef, Config.lambda)
     for i in eachindex(population)
         population[i] = ctype(nin, nout)
     end
@@ -18,22 +20,24 @@ function oneplus(nin::Int64, nout::Int64, fitness::Function;
     while eval_count < Config.total_evals
         # evaluation
         log_gen = false
+
+        new_fits = pmap(fitness, population)
+
         for p in eachindex(population)
-            if fits[p] == -Inf
-                fit = fitness(population[p])
-                eval_count += 1
-                if fit >= max_fit
-                    best = clone(population[p])
-                    if fit > max_fit
-                        max_fit = fit
-                        log_gen = true
-                    end
-                end
-                fits[p] = fit
-                if eval_count == Config.total_evals
+            # fit = fitness(population[p])
+            fit = new_fits[p]
+            eval_count += 1
+            if fit >= max_fit
+                best = clone(population[p])
+                if fit > max_fit
+                    max_fit = fit
                     log_gen = true
-                    break
                 end
+            end
+            fits[p] = fit
+            if eval_count == Config.total_evals
+                log_gen = true
+                break
             end
         end
 
@@ -53,6 +57,7 @@ function oneplus(nin::Int64, nout::Int64, fitness::Function;
         # size limit
         for i in eachindex(population)
             if length(population[i].nodes) > Config.node_size_cap
+                @info("Discarding individual because above node size cap")
                 population[i] = ctype(nin, nout)
                 fits[i] = -Inf
             end
