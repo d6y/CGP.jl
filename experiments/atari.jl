@@ -1,10 +1,10 @@
 @everywhere using ArcadeLearningEnvironment
 @everywhere using CGP
 @everywhere using Logging
-@everywhere using ArgParse
 @everywhere using Printf
 @everywhere using Random
 @everywhere import Images
+using ArgParse
 
 @everywhere CGP.Config.init("cfg/atari.yaml")
 include("../graphing/graph_utils.jl")
