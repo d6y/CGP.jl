@@ -1,6 +1,7 @@
 export log_best, log_all
 using Logging
 using Printf
+using Dates
 
 function log_best(id::String, seed::Int64, eval_count::Int64, max_fit::Float64,
                   best::Chromosome, ea::Function, ctype::DataType, log_gen::Bool)
@@ -14,7 +15,7 @@ function log_best(id::String, seed::Int64, eval_count::Int64, max_fit::Float64,
                             @sprintf("%s %s %s",
                                      string(ea), string(ctype), Config.to_string()))
         end
-        @info(logstr)
+        @info logstr timestamp=Dates.now(UTC)
     end
     if Config.save_best
         @info(@sprintf("C: %s", string(best.genes)))

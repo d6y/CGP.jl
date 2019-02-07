@@ -148,11 +148,11 @@ mkdir ~/.julia/packages/ArcadeLearningEnvironment/x1HHl/deps/rom_files
 Once ROMs have been configured, a CGP agent can be evolved using:
 
 ```bash
-julia --project=. experiments/atari.jl --id boxing
+JULIA_PROJECT=`pwd` julia -p3 experiments/atari.jl --id boxing
 ```
 
-This requires a long runtime. Parallelizing evaluations is a currently planned
-improvement: see [this issue](https://github.com/d9w/CGP.jl/issues/2).
+This will use 3 worker threads to call A.L.E. concurrently.
+NB: The use of `JULIA_PROJECT` is a workaround for [Julia issue 28781](https://github.com/JuliaLang/julia/issues/28781).
 
 ## Running `irace`
 
