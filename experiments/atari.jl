@@ -130,7 +130,7 @@ if ~isinteractive()
                       seed=args["seed"], id=args["id"], ctype=ctype)
 
     # Note: -maxfit is returned, being the "cost" to be minimized by irace
-    @info(@sprintf("E%0.6f", -maxfit))
+    @info(@sprintf("Z%0.6f", -maxfit))
     if args["render"]
         render_genes(best, args; ctype=ctype)
     end
