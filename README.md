@@ -154,6 +154,8 @@ JULIA_PROJECT=`pwd` julia -p3 experiments/atari.jl --id boxing
 This will use 3 worker threads to call A.L.E. concurrently.
 NB: The use of `JULIA_PROJECT` is a workaround for [Julia issue 28781](https://github.com/JuliaLang/julia/issues/28781).
 
+Cache loading warnings might be fixed via [#30174](https://github.com/JuliaLang/julia/pull/30174)
+
 ## Running `irace`
 
 Edit `target-runner` and adjust `EXE` and `JULIA_LOAD_PATH`. Then:
