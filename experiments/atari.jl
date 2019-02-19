@@ -25,6 +25,7 @@ include("../graphing/graph_utils.jl")
     p_action = game.actions[1]
     outputs = zeros(Int64, c.nout)
     while ~game_over(game.ale)
+        frames += 1
         output = process(c, get_rgb(game))
         outputs[argmax(output)] += 1
         action = game.actions[argmax(output)]
@@ -37,12 +38,14 @@ include("../graphing/graph_utils.jl")
             filename = string(folder, "/", @sprintf("frame_%06d.png", frames))
             Images.save(filename, screen)
         end
-        frames += 1
         if frames > max_frames
             @debug(string("Termination due to frame count on ", id))
             break
         end
     end
+    # Using println rather than @info here so the output is included
+    # with the "From worker N" prefix in the logs
+    println("Frames: ", frames, " Reward: ", reward)
     close!(game)
     Random.seed!(seed_reset)
     reward, outputs
